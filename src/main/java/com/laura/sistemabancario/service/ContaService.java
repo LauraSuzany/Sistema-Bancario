@@ -12,6 +12,9 @@ public class ContaService {
 
 	public Conta salvar(Conta conta) {
 		return contaRepository.save(conta);
+	}	
+	public Conta buscarPoragencia(int agencia) {
+		return contaRepository.findByagencia(agencia);
 	}
-
+	
 }

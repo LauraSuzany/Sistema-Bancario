@@ -11,14 +11,23 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import org.springframework.stereotype.Component;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+
+
+@Builder
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 @Entity
+@Component
 public class Conta implements Serializable {
 	
 	/**
@@ -29,8 +38,8 @@ public class Conta implements Serializable {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	@JsonIgnore
 	private long idConta;
-	private String agencia;
-	private String nConta;
+	private int agencia;
+	private int nConta;
 	@Column(nullable= false)
 	private double saldo;
 	@JsonIgnore
