@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import com.laura.sistemabancario.model.Conta;
 import com.laura.sistemabancario.repository.ContaRepository;
+
 @Service
 public class ContaService {
 	@Autowired
@@ -12,9 +13,16 @@ public class ContaService {
 
 	public Conta salvar(Conta conta) {
 		return contaRepository.save(conta);
-	}	
-	public Conta buscarPoragencia(int agencia) {
-		return contaRepository.findByagencia(agencia);
 	}
-	
+
+	public Conta findAgencia(int agencia) {
+		return contaRepository.findByAgencia(agencia);
+
+	}
+
+	public Conta findConta(int numeroConta) {
+
+		return contaRepository.findBynumeroConta(numeroConta);
+	}
+
 }

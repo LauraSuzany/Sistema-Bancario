@@ -39,7 +39,7 @@ public class Conta implements Serializable {
 	@JsonIgnore
 	private long idConta;
 	private int agencia;
-	private int nConta;
+	private int numeroConta;
 	@Column(nullable= false)
 	private double saldo;
 	@JsonIgnore
