@@ -38,49 +38,31 @@ public class ContaController {
 	}
 
 	// retorna um saldo de uma determinada conta e agencia e informa se a
-	// conta/agencia existem
 	@ApiOperation(value = "Consultar saldo por conta e agencia")
 	@RequestMapping(value = "consultar/{numeroConta}/{agencia}", method = RequestMethod.GET)
-	public ResponseEntity<?> buscarPoragenciaContaNum(@PathVariable int numeroConta, @PathVariable int agencia) throws SQLException {
-		
+	public ResponseEntity<?> buscarPoragenciaContaNum(@PathVariable int numeroConta, @PathVariable int agencia)
+			throws SQLException {
+		// verificar a existência da agência
 		Conta agenciaObj = contaService.findAgencia(agencia);
-		//verificar a exixtem da agencia
 		if (agenciaObj == null) {
 
 			throw new ResourceNotFoundException("Agência Inexistente: " + agencia);
 
 		}
-		//verificar a exixtem do número da conta
+		// verificar a existência do número da conta
 		Conta numeroContaObj = contaService.findConta(numeroConta);
 		if (numeroContaObj == null) {
 			throw new ResourceNotFoundException("Conta Corrent Inexistente " + numeroConta);
-			
+
 		}
-		// logica para retornar o saldo só se os dois campos mencionados corresponderem a uma conta
-		if(agenciaObj != numeroContaObj) {
-			throw new ResourceNotFoundException("Conta não encontrada para agência: "+agencia+" e número de conta: "+numeroConta+" informados");
+		// lógica para retornar o saldo só se os dois campos mencionados corresponderem
+		if (agenciaObj != numeroContaObj) {
+			throw new ResourceNotFoundException("Conta não encontrada para agência: " + agencia + " e número de conta: "
+					+ numeroConta + " informados");
 		}
-		
-		
+
 		return ResponseEntity.status(HttpStatus.OK).body(numeroContaObj);
-		
+
 	}
 
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-	
-		
-		
-	}
-
-
+}

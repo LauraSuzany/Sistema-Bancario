@@ -11,12 +11,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.laura.sistemabancario.error.ResourceNotFoundException;
 import com.laura.sistemabancario.model.Conta;
-import com.laura.sistemabancario.model.Transacao;
 import com.laura.sistemabancario.service.ContaService;
 import com.laura.sistemabancario.service.TransacaoService;
 
 import io.swagger.annotations.ApiOperation;
-
 
 @Controller
 @RestController
@@ -24,40 +22,41 @@ import io.swagger.annotations.ApiOperation;
 public class TransacaoController {
 	@Autowired
 	private ContaService contaService;
-	
+
 	@Autowired
-	private TransacaoService  transacaoService;
-	
-	@ApiOperation(value = "Consultar saldo por conta e agencia")
+	private TransacaoService transacaoService;
+
+	@ApiOperation(value = "Deposito")
 	@RequestMapping(value = "depositar/{valor}/{numeroConta}/{agencia}", method = RequestMethod.PUT)
-	public ResponseEntity<?> consultarAgenciaConta( @PathVariable double valor, @PathVariable int numeroConta, @PathVariable int agencia) {
+	public ResponseEntity<?> consultarAgenciaConta(@PathVariable double valor, @PathVariable int numeroConta,
+			@PathVariable int agencia) {
+		// verificar a existência da agência
 		Conta agenciaObj = contaService.findAgencia(agencia);
 		if (agenciaObj == null) {
-			// valor num conata agencia
 
 			throw new ResourceNotFoundException("Agência Inexistente: " + agencia);
 
 		}
 
+		// verificar a existência do número da conta
 		Conta numeroContaObj = contaService.findConta(numeroConta);
 		if (numeroContaObj == null) {
 			throw new ResourceNotFoundException("Conta Corrent Inexistente " + numeroConta);
 
 		}
+		// lógica para retornar o saldo só se os dois campos mencionados corresponderem
+		if (agenciaObj != numeroContaObj) {
+			throw new ResourceNotFoundException("Conta não encontrada para agência: " + agencia + " e número de conta: "
+					+ numeroConta + " informados");
+		}
 
-
-		// acho que vou fazer tudo aqui com o put e ainda mandar salvar coisas dentro de
-		// transacao	
-		
-//		
-//		Transacao transacao = transacaoService.saveAllById(transacao);
-//		transacaoService.saveAll(transacao);
-//		//transacaoService.saveAll(transacao);
-			
 		this.contaService.deposita(valor, numeroConta, agencia);
-		return ResponseEntity.status(HttpStatus.OK).body("Deposito realizado com sucesso!");
-		//return userDocumentationRepository.findById(userId);
-	}	
-	
-	
+		//return ResponseEntity.status(HttpStatus.OK).body(numeroContaObj+"Deposito realizado com sucesso!");
+		
+		return ResponseEntity.status(HttpStatus.OK).body("Deposito realizado com sucesso!! "
+				+ "\nValor: R$"+valor+  "\nAgência: "+agencia+" \nNúmero da Conta: "+numeroConta);
+		// return userDocumentationRepository.findById(userId);
+	}
+
+
 }
