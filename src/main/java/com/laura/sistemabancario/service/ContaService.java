@@ -1,5 +1,7 @@
 package com.laura.sistemabancario.service;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +25,11 @@ public class ContaService {
 	public Conta findConta(int numeroConta) {
 
 		return contaRepository.findBynumeroConta(numeroConta);
+	}
+
+	public void deposita(double valor, int numeroConta, int agencia) {
+		contaRepository.setSaldo(valor, numeroConta, agencia);
+		
 	}
 
 }

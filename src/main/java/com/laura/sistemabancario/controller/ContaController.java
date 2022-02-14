@@ -1,5 +1,7 @@
 package com.laura.sistemabancario.controller;
 
+import java.sql.SQLException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +31,7 @@ public class ContaController {
 	@ApiOperation(value = "Salvar conta")
 	@ExceptionHandler(BadRequest.class)
 	public Conta salvarConta(@PathVariable int agencia, @PathVariable int numeroConta, double saldo) {
-		
+
 		Conta conta = new Conta(0, agencia, numeroConta, saldo, null);
 		return contaService.salvar(conta);
 
@@ -39,21 +41,46 @@ public class ContaController {
 	// conta/agencia existem
 	@ApiOperation(value = "Consultar saldo por conta e agencia")
 	@RequestMapping(value = "consultar/{numeroConta}/{agencia}", method = RequestMethod.GET)
-	public ResponseEntity<?> buscarPoragenciaContaNum(@PathVariable int numeroConta, @PathVariable int agencia) {
-		Conta agenciaObj = contaService.findAgencia(agencia);
-		if (agenciaObj == null) {
-			
-			throw new ResourceNotFoundException("Agência Inexistente: " + agencia);
-			
-		}
+	public ResponseEntity<?> buscarPoragenciaContaNum(@PathVariable int numeroConta, @PathVariable int agencia) throws SQLException {
 		
+		Conta agenciaObj = contaService.findAgencia(agencia);
+		//verificar a exixtem da agencia
+		if (agenciaObj == null) {
+
+			throw new ResourceNotFoundException("Agência Inexistente: " + agencia);
+
+		}
+		//verificar a exixtem do número da conta
 		Conta numeroContaObj = contaService.findConta(numeroConta);
 		if (numeroContaObj == null) {
-			throw new ResourceNotFoundException("Conta Corrent Inexistente " + numeroConta);	
+			throw new ResourceNotFoundException("Conta Corrent Inexistente " + numeroConta);
 			
 		}
-
+		// logica para retornar o saldo só se os dois campos mencionados corresponderem a uma conta
+		if(agenciaObj != numeroContaObj) {
+			throw new ResourceNotFoundException("Conta não encontrada para agência: "+agencia+" e número de conta: "+numeroConta+" informados");
+		}
+		
+		
 		return ResponseEntity.status(HttpStatus.OK).body(numeroContaObj);
+		
 	}
 
-}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	
+		
+		
+	}
+
+
