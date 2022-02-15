@@ -26,10 +26,14 @@ public class ContaService {
 
 		return contaRepository.findBynumeroConta(numeroConta);
 	}
-
 	public void deposita(double valor, int numeroConta, int agencia) {
 		contaRepository.setSaldo(valor, numeroConta, agencia);
 		
+	}
+
+	public Optional<Conta> findByAgenciaAndNumConta(int agencia, int numeroConta) {
+		// TODO Auto-generated method stub
+		return contaRepository.findByAgenciaAndNumConta(numeroConta, agencia);
 	}
 
 }

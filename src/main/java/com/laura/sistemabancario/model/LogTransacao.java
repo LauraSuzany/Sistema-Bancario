@@ -24,7 +24,7 @@ public class LogTransacao implements Serializable{
 	@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	private long idLogTranzacao;
 	@ManyToOne(fetch = FetchType.EAGER)//seria usado quando não faz sentido puxar um objeto do BD sem puxar um outro também
-	@JoinColumn(name = "idTransacao", nullable = false)
+	@JoinColumn(name = "codigoTransacao", nullable = false)
 	private Transacao transacao;
 	
 }

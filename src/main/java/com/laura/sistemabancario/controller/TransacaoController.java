@@ -1,5 +1,6 @@
 package com.laura.sistemabancario.controller;
 
+import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -8,12 +9,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.laura.sistemabancario.error.ResourceNotFoundException;
 import com.laura.sistemabancario.model.Conta;
+import com.laura.sistemabancario.model.Transacao;
 import com.laura.sistemabancario.service.ContaService;
 import com.laura.sistemabancario.service.TransacaoService;
-
 import io.swagger.annotations.ApiOperation;
 
 @Controller
@@ -22,41 +22,57 @@ import io.swagger.annotations.ApiOperation;
 public class TransacaoController {
 	@Autowired
 	private ContaService contaService;
-
+//
 	@Autowired
 	private TransacaoService transacaoService;
-
+	
+	//logica para deposito com validação de campos agencia e conta
 	@ApiOperation(value = "Deposito")
-	@RequestMapping(value = "depositar/{valor}/{numeroConta}/{agencia}", method = RequestMethod.PUT)
-	public ResponseEntity<?> consultarAgenciaConta(@PathVariable double valor, @PathVariable int numeroConta,
-			@PathVariable int agencia) {
-		// verificar a existência da agência
-		Conta agenciaObj = contaService.findAgencia(agencia);
-		if (agenciaObj == null) {
+	@RequestMapping(value = "depositar/{descricao}/{valor}/{numeroConta}/{agencia}", method = RequestMethod.PUT)
+	public ResponseEntity<?> deposito(@PathVariable String descricao, @PathVariable double valor,
+		@PathVariable int numeroConta, @PathVariable int agencia) {
 
-			throw new ResourceNotFoundException("Agência Inexistente: " + agencia);
+		Conta agenciaObj = contaService.findByAgenciaAndNumConta(agencia, numeroConta)
+				.orElseThrow(() -> new ResourceNotFoundException("Conta Corrente ou agência Inexistente"));
 
-		}
+		Transacao trasacaoOnj = new Transacao();
+		trasacaoOnj.setNatuTransacao("Deposito");
+		trasacaoOnj.setDataTransacao(LocalDateTime.now());
+		trasacaoOnj.setDescricao(descricao);
+		trasacaoOnj.setValor(valor);
+		trasacaoOnj.setConta(agenciaObj);
+		this.transacaoService.salvar(trasacaoOnj);
+		// trasacaoOnj.setConta(contaobj);
 
-		// verificar a existência do número da conta
-		Conta numeroContaObj = contaService.findConta(numeroConta);
-		if (numeroContaObj == null) {
-			throw new ResourceNotFoundException("Conta Corrent Inexistente " + numeroConta);
+		this.transacaoService.deposita(valor, numeroConta, agencia);
+		// this.transacaoService.salvarIdConta(agenciaObj.getIdConta());
+		return ResponseEntity.status(HttpStatus.OK)
+				.body("Deposito realizado com sucesso!! " + "\nValor: R$" + valor + "\nAgência: " + agencia
+						+ " \nNúmero da Conta: " + numeroConta);
 
-		}
-		// lógica para retornar o saldo só se os dois campos mencionados corresponderem
-		if (agenciaObj != numeroContaObj) {
-			throw new ResourceNotFoundException("Conta não encontrada para agência: " + agencia + " e número de conta: "
-					+ numeroConta + " informados");
-		}
-
-		this.contaService.deposita(valor, numeroConta, agencia);
-		//return ResponseEntity.status(HttpStatus.OK).body(numeroContaObj+"Deposito realizado com sucesso!");
-		
-		return ResponseEntity.status(HttpStatus.OK).body("Deposito realizado com sucesso!! "
-				+ "\nValor: R$"+valor+  "\nAgência: "+agencia+" \nNúmero da Conta: "+numeroConta);
-		// return userDocumentationRepository.findById(userId);
 	}
+	//logica para saque com validação de campos agencia e conta
+	@ApiOperation(value = "Saque")
+	@RequestMapping(value = "saque/{descricao}/{valor}/{numeroConta}/{agencia}", method = RequestMethod.PUT)
+	public ResponseEntity<?> saque(@PathVariable String descricao, @PathVariable double valor,
+		@PathVariable int numeroConta, @PathVariable int agencia) {
 
+		Conta agenciaObj = contaService.findByAgenciaAndNumConta(agencia, numeroConta)
+				.orElseThrow(() -> new ResourceNotFoundException("Conta Corrente ou agência Inexistente"));
 
+		Transacao trasacaoOnj = new Transacao();
+		trasacaoOnj.setNatuTransacao("Saque");
+		trasacaoOnj.setDataTransacao(LocalDateTime.now());
+		trasacaoOnj.setDescricao(descricao);
+		trasacaoOnj.setValor(valor);
+		trasacaoOnj.setConta(agenciaObj);
+		this.transacaoService.salvar(trasacaoOnj);
+		this.transacaoService.saque(valor, numeroConta, agencia);
+		// this.transacaoService.salvarIdConta(agenciaObj.getIdConta());
+		return ResponseEntity.status(HttpStatus.OK)
+				.body("Saque realizado com sucesso!! " + "\nValor: R$ -" + valor + "\nAgência: " + agencia
+						+ " \nNúmero da Conta: " + numeroConta);
+
+	}
 }
+

@@ -37,8 +37,5 @@ public class Conta implements Serializable {
 	private int numeroConta;
 	@Column(nullable = false)
 	private double saldo;
-	@JsonIgnore
-	@OneToMany(mappedBy = "conta", fetch = FetchType.EAGER)
-	private Set<Transacao> transacaos;
 
 }

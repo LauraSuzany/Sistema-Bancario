@@ -30,9 +30,9 @@ public class ContaController {
 	@PostMapping("/salvar/{agencia}/{numeroConta}/{saldo}")
 	@ApiOperation(value = "Salvar conta")
 	@ExceptionHandler(BadRequest.class)
-	public Conta salvarConta(@PathVariable int agencia, @PathVariable int numeroConta, double saldo) {
+	public Conta salvarConta(@PathVariable int agencia, @PathVariable int numeroConta,@PathVariable double saldo) {
 
-		Conta conta = new Conta(0, agencia, numeroConta, saldo, null);
+		Conta conta = new Conta(0, agencia, numeroConta, saldo);
 		return contaService.salvar(conta);
 
 	}
@@ -43,25 +43,34 @@ public class ContaController {
 	public ResponseEntity<?> buscarPoragenciaContaNum(@PathVariable int numeroConta, @PathVariable int agencia)
 			throws SQLException {
 		// verificar a existência da agência
-		Conta agenciaObj = contaService.findAgencia(agencia);
-		if (agenciaObj == null) {
+		Conta agenciaObj = contaService.findByAgenciaAndNumConta(agencia, numeroConta )
+				.orElseThrow(() -> new ResourceNotFoundException("Número da conta ou agência incorretos") );
+		
+		
+		
+		
+		
+		
+		
+		
+//		if (agenciaObj == null) {
+//
+//			throw new ResourceNotFoundException("Agência Inexistente: " + agencia);
+//
+//		}
+//		// verificar a existência do número da conta
+//		Conta numeroContaObj = contaService.findConta(numeroConta);
+//		if (numeroContaObj == null) {
+//			throw new ResourceNotFoundException("Conta Corrent Inexistente " + numeroConta);
+//
+//		}
+//		// lógica para retornar o saldo só se os dois campos mencionados corresponderem
+//		if (agenciaObj != numeroContaObj) {
+//			throw new ResourceNotFoundException("Conta não encontrada para agência: " + agencia + " e número de conta: "
+//					+ numeroConta + " informados");
+//		}
 
-			throw new ResourceNotFoundException("Agência Inexistente: " + agencia);
-
-		}
-		// verificar a existência do número da conta
-		Conta numeroContaObj = contaService.findConta(numeroConta);
-		if (numeroContaObj == null) {
-			throw new ResourceNotFoundException("Conta Corrent Inexistente " + numeroConta);
-
-		}
-		// lógica para retornar o saldo só se os dois campos mencionados corresponderem
-		if (agenciaObj != numeroContaObj) {
-			throw new ResourceNotFoundException("Conta não encontrada para agência: " + agencia + " e número de conta: "
-					+ numeroConta + " informados");
-		}
-
-		return ResponseEntity.status(HttpStatus.OK).body(numeroContaObj);
+		return ResponseEntity.status(HttpStatus.OK).body(agenciaObj);
 
 	}
 

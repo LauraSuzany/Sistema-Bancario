@@ -23,7 +23,7 @@ public class SwaggerConfig {
 	}
 
 	private ApiInfo apiInfo() {
-		return new ApiInfoBuilder().title("Teste Backend Developer").description("Teste empresa DBA Suporte ")
+		return new ApiInfoBuilder().title("Teste Backend Developer").description("Teste empresa W3 | Automação e sistemas [Sistema de Automação Bancaria] ")
 				.termsOfServiceUrl("https://www.smartr.me/public/profiles/laura.suzany").version("1.0.0").build();
 
 	}

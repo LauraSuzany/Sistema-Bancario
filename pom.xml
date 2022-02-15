@@ -87,6 +87,10 @@
 			<scope>provided</scope>
 			<optional>true</optional>
 		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-core</artifactId>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>
@@ -113,6 +117,7 @@
 							<groupId>org.mapstruct</groupId>
 							<artifactId>mapstruct-processor</artifactId>
 							<version>1.4.2.Final</version>
+							
 						</path>
 					</annotationProcessorPaths>
 				</configuration>
