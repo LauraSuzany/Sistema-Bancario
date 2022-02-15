@@ -1,7 +1,7 @@
 package com.laura.sistemabancario.model;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -37,7 +37,7 @@ public class Transacao implements Serializable{
 	private String natuTransacao; // se é C- ou D+ 
 	private double valor;
 	@Column
-	private LocalDateTime dataTransacao;	
+	private LocalDate dataTransacao;	
 	@ManyToOne
 	@JoinColumn(name = "idConta")
 	private Conta conta;	
