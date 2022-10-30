@@ -1,5 +1,5 @@
 
-<h1 align="center"> Aplicação Sistema-Bancario </h1>
+<h1 align="center"> Sistema-Bancario </h1>
 
 <div align="center">
 
@@ -13,7 +13,7 @@
 
 <img src="https://empreenderdinheiro.com.br/wp-content/uploads/2019/08/sistema-bancario-1-1024x734.jpg" width=50% height=50%>
 
-O obejtivo dessa programa: Oferecer no mínimo as operações básicas: Saldo, Saque, Depósito e Extrato
+O obejtivo dessa programa: Oferecer operações básicas, tais como: Saldo, Saque, Depósito e Extrato
  
  ✍ "_Every day is a learning Day"
 business: L.M code e Tecnologia_ 
